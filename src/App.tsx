@@ -23,6 +23,7 @@ import { SearchModal } from './components/SearchModal';
 import { ServiceDetailModal } from './components/ServiceDetailModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { RightFixedServiceShowcase } from './components/RightFixedServiceShowcase';
+import { AskMitraChat } from './components/AskMitraChat';
 import { ServiceItem } from './types';
 import { MessageCircle, QrCode } from 'lucide-react';
 
@@ -131,6 +132,9 @@ const MainContent: React.FC = () => {
         onOpenSearch={() => setIsSearchModalOpen(true)}
         onNavigate={scrollToSection}
       />
+
+      {/* Ask Mitra AI Support Chatbot */}
+      <AskMitraChat />
     </div>
   );
 };

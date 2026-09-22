@@ -1,10 +1,13 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
+import {AdminDashboard} from './components/AdminDashboard';
 import './index.css';
+
+const isAdminRoute = window.location.pathname.replace(/\/+$/, '') === '/admin';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    {isAdminRoute ? <AdminDashboard /> : <App />}
   </StrictMode>,
 );
