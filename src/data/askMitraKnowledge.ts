@@ -1,5 +1,5 @@
-import { SERVICE_CATEGORIES } from './servicesData';
-import { ServiceItem } from '../types';
+import { SERVICE_CATEGORIES } from './servicesData.js';
+import { ServiceItem } from '../types.js';
 
 export const BUSINESS_INFO_CHUNK = `BUSINESS INFO
 Name: Success Computech & Gift Shop

@@ -1,4 +1,4 @@
-import {handleAdminLogs} from '../../server/askMitraHandlers';
+import {handleAdminLogs} from '../../server/askMitraHandlers.js';
 
 function getBearerToken(req: any): string | null {
   const header = req.headers['authorization'] || '';

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig, Plugin} from 'vite';
 import dotenv from 'dotenv';
-import {handleAskMitra, handleAdminLogin, handleAdminLogs} from './server/askMitraHandlers';
+import {handleAskMitra, handleAdminLogin, handleAdminLogs} from './server/askMitraHandlers.js';
 
 dotenv.config();
 

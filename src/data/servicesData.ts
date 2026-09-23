@@ -1,4 +1,4 @@
-import { ServiceCategory, LatestUpdate, ApplicationStatus } from '../types';
+import { ServiceCategory, LatestUpdate, ApplicationStatus } from '../types.js';
 
 export const LATEST_UPDATES: LatestUpdate[] = [
   {

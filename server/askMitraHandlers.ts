@@ -1,8 +1,8 @@
 import {GoogleGenAI} from '@google/genai';
-import {retrieveContext} from '../src/data/askMitraKnowledge';
-import {ASK_MITRA_SYSTEM_PROMPT} from '../src/data/askMitraSystemPrompt';
-import {appendLog, readLogs} from './askMitraStore';
-import {login, isValidToken} from './adminAuth';
+import {retrieveContext} from '../src/data/askMitraKnowledge.js';
+import {ASK_MITRA_SYSTEM_PROMPT} from '../src/data/askMitraSystemPrompt.js';
+import {appendLog, readLogs} from './askMitraStore.js';
+import {login, isValidToken} from './adminAuth.js';
 
 export interface ChatTurn {
   role: 'user' | 'model';

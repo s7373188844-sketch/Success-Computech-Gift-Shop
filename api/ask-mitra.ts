@@ -1,4 +1,4 @@
-import {handleAskMitra} from '../server/askMitraHandlers';
+import {handleAskMitra} from '../server/askMitraHandlers.js';
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
