@@ -19,6 +19,31 @@ function getClient(): InstanceType<typeof GoogleGenAI> | null {
   return apiKey && apiKey !== 'MY_GEMINI_API_KEY' ? new GoogleGenAI({apiKey}) : null;
 }
 
+function isRetryableStatus(err: any): boolean {
+  const status = err?.status ?? err?.error?.code;
+  return status === 503 || status === 429;
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function generateWithRetry(
+  ai: InstanceType<typeof GoogleGenAI>,
+  params: Parameters<InstanceType<typeof GoogleGenAI>['models']['generateContent']>[0],
+  attempts = 3
+) {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await ai.models.generateContent(params);
+    } catch (err) {
+      lastErr = err;
+      if (!isRetryableStatus(err) || i === attempts - 1) throw err;
+      await sleep(500 * (i + 1)); // 500ms, 1000ms backoff
+    }
+  }
+  throw lastErr;
+}
+
 export async function handleAskMitra(body: any): Promise<HandlerResult> {
   const message: string = (body?.message || '').toString().slice(0, 2000).trim();
   const history: ChatTurn[] = Array.isArray(body?.history) ? body.history : [];
@@ -51,7 +76,7 @@ export async function handleAskMitra(body: any): Promise<HandlerResult> {
       },
     ];
 
-    const response = await ai.models.generateContent({
+    const response = await generateWithRetry(ai, {
       model: 'gemini-3.6-flash',
       contents,
       config: {systemInstruction: ASK_MITRA_SYSTEM_PROMPT, temperature: 0.3},
@@ -65,7 +90,14 @@ export async function handleAskMitra(body: any): Promise<HandlerResult> {
     return {status: 200, body: {reply}};
   } catch (err) {
     console.error('[Ask Mitra] error:', err);
-    return {status: 500, body: {error: 'Something went wrong. Please try again or contact the shop directly.'}};
+    const reply = isRetryableStatus(err)
+      ? lang === 'ta'
+        ? 'Ask Mitra ippo busy-a irukku (high demand). Konjam neram kalichu try pannunga, illa shop-a WhatsApp (7373188844) pannunga.'
+        : "Ask Mitra is a bit busy right now (high demand). Please try again shortly, or WhatsApp the shop at 7373188844."
+      : lang === 'ta'
+        ? 'ஏதோ தவறு நடந்தது. Konjam neram kalichu try pannunga, illa shop-a WhatsApp (7373188844) pannunga.'
+        : 'Something went wrong. Please try again, or WhatsApp the shop at 7373188844.';
+    return {status: 200, body: {reply}};
   }
 }
 
