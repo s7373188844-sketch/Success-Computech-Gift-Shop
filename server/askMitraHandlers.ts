@@ -9,14 +9,30 @@ export interface ChatTurn {
   text: string;
 }
 
+interface ContentPart {
+  role: 'user' | 'model';
+  parts: {text: string}[];
+}
+
 export interface HandlerResult {
   status: number;
   body: Record<string, unknown>;
 }
 
-function getClient(): InstanceType<typeof GoogleGenAI> | null {
+function getGeminiClient(): InstanceType<typeof GoogleGenAI> | null {
   const apiKey = process.env.GEMINI_API_KEY;
   return apiKey && apiKey !== 'MY_GEMINI_API_KEY' ? new GoogleGenAI({apiKey}) : null;
+}
+
+interface OpenAIConfig {
+  apiKey: string;
+  model: string;
+}
+
+function getOpenAIConfig(): OpenAIConfig | null {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || apiKey === 'MY_OPENAI_API_KEY') return null;
+  return {apiKey, model: process.env.OPENAI_MODEL || 'gpt-4o-mini'};
 }
 
 function isRetryableStatus(err: any): boolean {
@@ -26,7 +42,7 @@ function isRetryableStatus(err: any): boolean {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function generateWithRetry(
+async function generateWithGeminiRetry(
   ai: InstanceType<typeof GoogleGenAI>,
   params: Parameters<InstanceType<typeof GoogleGenAI>['models']['generateContent']>[0],
   attempts = 3
@@ -44,6 +60,35 @@ async function generateWithRetry(
   throw lastErr;
 }
 
+async function callOpenAI(config: OpenAIConfig, systemPrompt: string, contents: ContentPart[]): Promise<string> {
+  const messages = [
+    {role: 'system', content: systemPrompt},
+    ...contents.map((c) => ({
+      role: c.role === 'model' ? 'assistant' : 'user',
+      content: c.parts.map((p) => p.text).join('\n'),
+    })),
+  ];
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${config.apiKey}`,
+    },
+    body: JSON.stringify({model: config.model, messages, temperature: 0.3}),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => '');
+    throw new Error(`OpenAI ${res.status}: ${errText.slice(0, 300)}`);
+  }
+
+  const data = await res.json();
+  const text = data?.choices?.[0]?.message?.content?.trim();
+  if (!text) throw new Error('OpenAI returned no content');
+  return text;
+}
+
 export async function handleAskMitra(body: any): Promise<HandlerResult> {
   const message: string = (body?.message || '').toString().slice(0, 2000).trim();
   const history: ChatTurn[] = Array.isArray(body?.history) ? body.history : [];
@@ -55,50 +100,65 @@ export async function handleAskMitra(body: any): Promise<HandlerResult> {
     return {status: 400, body: {error: 'Empty message'}};
   }
 
-  const ai = getClient();
+  const contextChunks = retrieveContext(message);
+  const contextBlock = contextChunks.map((c, i) => `--- CONTEXT CHUNK ${i + 1} ---\n${c}`).join('\n\n');
 
-  if (!ai) {
-    const reply =
-      'Ask Mitra setup ippo mudiyala (GEMINI_API_KEY .env file-la illa). Shop-a nerudiya contact/visit pannunga: 15/12, PN Rd, opposite AK Motors, Kamaraj Nagar, Tiruppur, Tamil Nadu 641602. (Mon-Sat 9:30AM-9:00PM, Sun 9:30AM-2:30PM)';
-    appendLog({customerName, customerMobile, question: message, answer: reply, lang});
-    return {status: 200, body: {reply}};
+  const contents: ContentPart[] = [
+    ...history.slice(-8).map((h) => ({role: h.role, parts: [{text: h.text}]})),
+    {
+      role: 'user' as const,
+      parts: [{text: `CONTEXT:\n${contextBlock}\n\nCUSTOMER MESSAGE:\n${message}`}],
+    },
+  ];
+
+  let reply: string | null = null;
+  let lastErr: unknown = null;
+  let answeredBy: 'gemini' | 'openai' | null = null;
+
+  const gemini = getGeminiClient();
+  if (gemini) {
+    try {
+      const response = await generateWithGeminiRetry(gemini, {
+        model: 'gemini-3.6-flash',
+        contents,
+        config: {systemInstruction: ASK_MITRA_SYSTEM_PROMPT, temperature: 0.3},
+      });
+      reply = response.text?.trim() || null;
+      if (reply) answeredBy = 'gemini';
+    } catch (err) {
+      lastErr = err;
+      console.error('[Ask Mitra] Gemini failed:', err);
+    }
   }
 
-  try {
-    const contextChunks = retrieveContext(message);
-    const contextBlock = contextChunks.map((c, i) => `--- CONTEXT CHUNK ${i + 1} ---\n${c}`).join('\n\n');
+  if (!reply) {
+    const openaiConfig = getOpenAIConfig();
+    if (openaiConfig) {
+      try {
+        reply = await callOpenAI(openaiConfig, ASK_MITRA_SYSTEM_PROMPT, contents);
+        answeredBy = 'openai';
+      } catch (err) {
+        lastErr = err;
+        console.error('[Ask Mitra] OpenAI fallback failed:', err);
+      }
+    }
+  }
 
-    const contents = [
-      ...history.slice(-8).map((h) => ({role: h.role, parts: [{text: h.text}]})),
-      {
-        role: 'user' as const,
-        parts: [{text: `CONTEXT:\n${contextBlock}\n\nCUSTOMER MESSAGE:\n${message}`}],
-      },
-    ];
-
-    const response = await generateWithRetry(ai, {
-      model: 'gemini-3.6-flash',
-      contents,
-      config: {systemInstruction: ASK_MITRA_SYSTEM_PROMPT, temperature: 0.3},
-    });
-
-    const reply =
-      response.text?.trim() || 'Mannikkanum, ippo reply generate panna mudiyala. Shop-a nerudiya contact pannunga.';
-
-    appendLog({customerName, customerMobile, question: message, answer: reply, lang});
-
-    return {status: 200, body: {reply}};
-  } catch (err) {
-    console.error('[Ask Mitra] error:', err);
-    const reply = isRetryableStatus(err)
+  if (!reply) {
+    reply = isRetryableStatus(lastErr)
       ? lang === 'ta'
         ? 'Ask Mitra ippo busy-a irukku (high demand). Konjam neram kalichu try pannunga, illa shop-a WhatsApp (7373188844) pannunga.'
-        : "Ask Mitra is a bit busy right now (high demand). Please try again shortly, or WhatsApp the shop at 7373188844."
+        : 'Ask Mitra is a bit busy right now (high demand). Please try again shortly, or WhatsApp the shop at 7373188844.'
       : lang === 'ta'
         ? 'ஏதோ தவறு நடந்தது. Konjam neram kalichu try pannunga, illa shop-a WhatsApp (7373188844) pannunga.'
         : 'Something went wrong. Please try again, or WhatsApp the shop at 7373188844.';
-    return {status: 200, body: {reply}};
+  } else {
+    console.log(`[Ask Mitra] Answered via ${answeredBy}`);
   }
+
+  appendLog({customerName, customerMobile, question: message, answer: reply, lang});
+
+  return {status: 200, body: {reply}};
 }
 
 export async function handleAdminLogin(body: any): Promise<HandlerResult> {
