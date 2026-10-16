@@ -1,0 +1,3 @@
+/* Tailwind is used only by the private /admin dashboard. */
+@import "tailwindcss";
+@source "./AdminDashboard.tsx";

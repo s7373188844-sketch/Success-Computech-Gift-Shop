@@ -1,7 +1,5 @@
 export type Language = 'ta' | 'en';
 
-export type ThemePalette = 'navy-orange' | 'red-white' | 'emerald-gold' | 'royal-blue';
-
 export interface ServiceItem {
   id: string;
   categoryId: string;
@@ -34,32 +32,31 @@ export interface ServiceCategory {
   services: ServiceItem[];
 }
 
-export interface LatestUpdate {
+export type GiftArtKind = 'frame' | 'plaque' | 'mug' | 'acrylic' | 'apparel' | 'corporate';
+
+export interface GiftCategory {
   id: string;
-  date: string;
-  tag_en: string;
-  tag_ta: string;
-  title_en: string;
-  title_ta: string;
-  desc_en: string;
-  desc_ta: string;
-  isNew?: boolean;
-  linkServiceId?: string;
+  art: GiftArtKind;
+  name_en: string;
+  name_ta: string;
+  shortDesc_en: string;
+  shortDesc_ta: string;
+  items_en: string[];
+  items_ta: string[];
+  occasions: ('birthday' | 'anniversary' | 'wedding' | 'corporate' | 'festival')[];
+  /** From the previous website; owner to confirm. */
+  readyIn_en?: string;
+  readyIn_ta?: string;
+  /** Put real photos in /public/images/gifts/ and list them here, e.g. '/images/gifts/frames-1.webp' */
+  photos: { src: string; alt_en: string; alt_ta: string }[];
 }
 
-export interface ApplicationStatus {
-  refNumber: string;
-  customerName: string;
-  mobile: string;
-  serviceId: string;
-  serviceName_en: string;
-  serviceName_ta: string;
-  dateApplied: string;
-  currentStep: number; // 1 to 4
-  statusText_en: string;
-  statusText_ta: string;
-  updatedDate: string;
-  remarks_en: string;
-  remarks_ta: string;
-  ackNumber?: string;
+export interface ShowcaseVideo {
+  id: string;
+  title_en: string;
+  title_ta: string;
+  /** e.g. '/videos/laser-engraving.mp4'. Leave empty until the clip is filmed. */
+  mp4?: string;
+  webm?: string;
+  poster?: string;
 }
