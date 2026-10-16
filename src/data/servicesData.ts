@@ -1,67 +1,4 @@
-import { ServiceCategory, LatestUpdate, ApplicationStatus } from '../types.js';
-
-export const LATEST_UPDATES: LatestUpdate[] = [
-  {
-    id: 'upd-1',
-    date: 'March 2025',
-    tag_en: 'Aadhaar Alert',
-    tag_ta: 'ஆதார் முக்கிய செய்தி',
-    title_en: 'Mandatory Aadhaar Document Update Free Facility',
-    title_ta: 'ஆதார் அடையாள & முகவரி ஆவணங்கள் இலவசமாக புதுப்பிக்க கடைசி வாய்ப்பு',
-    desc_en: 'Update your Proof of Identity (POI) and Proof of Address (POA) online to avoid deactivation. Visit us or send on WhatsApp.',
-    desc_ta: 'ஆதார் கார்டு எடுத்து 10 வருடங்களுக்கு மேல் ஆகியிருந்தால் POI/POA ஆவணங்களை ஆன்லைனில் விரைந்து புதுப்பியுங்கள்.',
-    isNew: true,
-    linkServiceId: 'aadhaar'
-  },
-  {
-    id: 'upd-2',
-    date: 'March 2025',
-    tag_en: 'TNPSC Exams',
-    tag_ta: 'டி.என்.பி.எஸ்.சி',
-    title_en: 'TNPSC Group 4 & Group 2 Application & Hall Ticket Alert',
-    title_ta: 'TNPSC குரூப் 4 & 2 விண்ணப்பங்கள் மற்றும் ஹால் டிக்கெட் பதிவிறக்கம் தயார்',
-    desc_en: 'Online application assistance, photo/signature resizing according to TNPSC guidelines, and high-quality hall ticket printout.',
-    desc_ta: 'சரியான அளவு போட்டோ மற்றும் கையொப்பத்துடன் தேர்வு விண்ணப்பம் & ஹால் டிக்கெட் உடனடியாக பெற்றுக்கொள்ளலாம்.',
-    isNew: true,
-    linkServiceId: 'tnpsc-exam'
-  },
-  {
-    id: 'upd-3',
-    date: 'March 2025',
-    tag_en: 'Sabarimala / TTD',
-    tag_ta: 'கோயில் முன்பதிவு',
-    title_en: 'Sabarimala Virtual Q & Tirupati Special Darshan Ticket Booking Open',
-    title_ta: 'சபரிமலை தரிசனம் மற்றும் திருப்பதி ₹300 சிறப்பு தரிசன டிக்கெட் புக்கிங் ஆரம்பம்',
-    desc_en: 'Book confirmed online Virtual Queue and Special Entry Darshan tokens with room reservations for pilgrims without queue hassles.',
-    desc_ta: 'சபரிமலை விர்ச்சுவல் க்யூ மற்றும் திருப்பதி தேவஸ்தான சிறப்பு தரிசன டிக்கெட் உடனடி முன்பதிவு.',
-    isNew: true,
-    linkServiceId: 'temple-darshan'
-  },
-  {
-    id: 'upd-4',
-    date: 'March 2025',
-    tag_en: 'Income Tax & PAN',
-    tag_ta: 'பான் கார்டு அறிவிப்பு',
-    title_en: 'PAN - Aadhaar Linking & Penalty Exemption Updates',
-    title_ta: 'பான் - ஆதார் கார்டு இணைப்பு சரிபார்ப்பு மற்றும் திருத்தம்',
-    desc_en: 'Check if your PAN card is operative and link with Aadhaar. Get duplicate PAN or address/name correction.',
-    desc_ta: 'உங்கள் பான் கார்டு செயல்படுகிறதா என்பதை சரிபார்த்து பான் திருத்தம் & ரீபிரிண்ட் பெற்றுக்கொள்ளலாம்.',
-    isNew: false,
-    linkServiceId: 'pan-card'
-  },
-  {
-    id: 'upd-5',
-    date: 'March 2025',
-    tag_en: 'Driving Licence',
-    tag_ta: 'ஓட்டுநர் உரிமம்',
-    title_en: 'Driving Licence Paperless Renewal & Address Change online',
-    title_ta: 'ஓட்டுநர் உரிமம் (DL) புதுப்பித்தல் மற்றும் முகவரி மாற்றம் ஆன்லைன் சேவை',
-    desc_en: 'Renew your expired driving licence and apply for LLR learner license without long wait.',
-    desc_ta: 'காலாவதியான ஓட்டுநர் உரிமத்தை ஆன்லைனில் சுலபமாக ரினீவல் செய்து வீட்டில் இருந்தே பெறலாம்.',
-    isNew: false,
-    linkServiceId: 'driving-licence'
-  }
-];
+import { ServiceCategory } from '../types.js';
 
 export const SERVICE_CATEGORIES: ServiceCategory[] = [
   {
@@ -1034,72 +971,69 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
         processingTime_ta: '15 நிமிடங்களில் கையில் பெறலாம் / வாட்ஸ்அப் பிடிஎஃப்'
       }
     ]
-  }
-];
-
-export const DEMO_STATUS_RECORDS: ApplicationStatus[] = [
-  {
-    refNumber: 'SC-2026-PAN402',
-    customerName: 'Karthikeyan S.',
-    mobile: '98421XXXXX',
-    serviceId: 'pan-card',
-    serviceName_en: 'PAN Card Correction (Name & DOB)',
-    serviceName_ta: 'பான் கார்டு திருத்தம் (பெயர் & பிறந்த தேதி)',
-    dateApplied: '14-Mar-2026',
-    currentStep: 3,
-    statusText_en: 'Processing at NSDL / UTI Headquarters',
-    statusText_ta: 'விண்ணப்பம் பரிசீலனையில் உள்ளது (UTI/NSDL)',
-    updatedDate: '17-Mar-2026',
-    remarks_en: 'Documents verified successfully. e-PAN generated. Physical card dispatched via India Post Speed Post.',
-    remarks_ta: 'ஆவணங்கள் சரிபார்க்கப்பட்டது. இ-பான் உருவாக்கப்பட்டது. அசல் அட்டை ஸ்பீட் போஸ்ட் மூலம் அனுப்பப்பட்டுள்ளது.',
-    ackNumber: 'NSDL-88291048821'
   },
   {
-    refNumber: 'SC-2026-DL891',
-    customerName: 'Praveen Kumar M.',
-    mobile: '97892XXXXX',
-    serviceId: 'driving-licence',
-    serviceName_en: 'Driving Licence Renewal & Address Change',
-    serviceName_ta: 'ஓட்டுநர் உரிமம் ரினீவல் & முகவரி மாற்றம்',
-    dateApplied: '10-Mar-2026',
-    currentStep: 4,
-    statusText_en: 'Approved by RTO - Ready for Smart Card Dispatch',
-    statusText_ta: 'RTO ஒப்புதல் முடிந்தது - அட்டை பிரிண்ட் செய்யப்படுகிறது',
-    updatedDate: '16-Mar-2026',
-    remarks_en: 'RTO scrutiny completed. Updated driving licence is ready. You can collect the PVC card from our centre or via post.',
-    remarks_ta: 'RTO ஒப்புதல் நிறைவு பெற்றது. புதிய ஓட்டுநர் உரிமம் ரெடியாக உள்ளது. கடையில் பெற்றுக்கொள்ளலாம்.',
-    ackNumber: 'TN39-2026-003891'
-  },
-  {
-    refNumber: 'SC-2026-PASS11',
-    customerName: 'Revathi Murugesan',
-    mobile: '94432XXXXX',
-    serviceId: 'passport-new-renewal',
-    serviceName_en: 'Fresh Normal Passport Application',
-    serviceName_ta: 'புதிய பாஸ்போர்ட் விண்ணப்பம்',
-    dateApplied: '12-Mar-2026',
-    currentStep: 2,
-    statusText_en: 'PSK Appointment Confirmed - Document Verification',
-    statusText_ta: 'PSK அப்பாயிண்ட்மென்ட் உறுதி செய்யப்பட்டது',
-    updatedDate: '15-Mar-2026',
-    remarks_en: 'Slot booked at POPSK Tiruppur for 21-Mar-2026, 10:15 AM. Document checklist sent to customer WhatsApp.',
-    remarks_ta: 'திருப்பூர் பாஸ்போர்ட் மையத்தில் 21-Mar-2026 அன்று காலை 10:15 மணிக்கு நேரம் புக் செய்யப்பட்டுள்ளது.',
-    ackNumber: 'ARN-26-800412891'
-  },
-  {
-    refNumber: 'SC-2026-GST05',
-    customerName: 'Shri Ram Tex Textiles',
-    mobile: '96291XXXXX',
-    serviceId: 'gst-services',
-    serviceName_en: 'New GST Registration',
-    serviceName_ta: 'புதிய ஜிஎஸ்டி பதிவு',
-    dateApplied: '15-Mar-2026',
-    currentStep: 2,
-    statusText_en: 'Submitted to GST Department - Aadhar Authentication Pending',
-    statusText_ta: 'GST துறையில் சமர்ப்பிக்கப்பட்டு ஆதார் சரிபார்ப்பில் உள்ளது',
-    updatedDate: '17-Mar-2026',
-    remarks_en: 'ARN generated. Aadhaar OTP biometric link verified. Awaiting State GST Officer approval.',
-    remarks_ta: 'ARN எண் உருவாக்கப்பட்டது. ஆதார் OTP சரிபார்க்கப்பட்டது. அதிகாரி ஒப்புதலுக்கு காத்திருக்கிறது.',
-    ackNumber: 'ARN-AA330326001289P'
+    id: 'printing-design',
+    iconName: 'Printer',
+    title_en: 'Printing, Lamination & Design',
+    title_ta: 'பிரிண்டிங், லேமினேஷன் & டிசைன்',
+    description_en: 'Document printouts, lamination, binding, visiting cards, flex banners and posters',
+    description_ta: 'ஆவண பிரிண்ட், லேமினேஷன், பைண்டிங், விசிட்டிங் கார்டு, ஃப்ளெக்ஸ் பேனர், போஸ்டர்',
+    services: [
+      {
+        id: 'printing-lamination',
+        categoryId: 'printing-design',
+        name_en: 'Printouts, Lamination & Binding',
+        name_ta: 'பிரிண்ட், லேமினேஷன் & பைண்டிங்',
+        tag_en: 'Documents',
+        tag_ta: 'ஆவணங்கள்',
+        shortDesc_en: 'Colour and black-and-white printouts, certificate lamination, ID pouch lamination and spiral binding.',
+        shortDesc_ta: 'கலர் மற்றும் கருப்பு-வெள்ளை பிரிண்ட், சான்றிதழ் லேமினேஷன், ஐடி பவுச் லேமினேஷன், ஸ்பைரல் பைண்டிங்.',
+        subServices_en: [
+          'Colour and black-and-white printouts',
+          'Certificate and document lamination',
+          'ID pouch lamination',
+          'Spiral binding'
+        ],
+        subServices_ta: [
+          'கலர் & கருப்பு-வெள்ளை பிரிண்ட்',
+          'சான்றிதழ் & ஆவண லேமினேஷன்',
+          'ஐடி பவுச் லேமினேஷன்',
+          'ஸ்பைரல் பைண்டிங்'
+        ],
+        requiredDocuments_en: ['The file or document to print (send on WhatsApp or bring a copy)'],
+        requiredDocuments_ta: ['பிரிண்ட் செய்ய வேண்டிய கோப்பு அல்லது ஆவணம் (வாட்ஸ்அப்பில் அனுப்பலாம் அல்லது நகல் கொண்டு வரலாம்)'],
+        processingTime_en: 'Usually the same day',
+        processingTime_ta: 'பொதுவாக அன்றே'
+      },
+      {
+        id: 'commercial-printing',
+        categoryId: 'printing-design',
+        name_en: 'Visiting Cards, Banners & Commercial Printing',
+        name_ta: 'விசிட்டிங் கார்டு, பேனர் & வர்த்தக பிரிண்டிங்',
+        tag_en: 'Business printing',
+        tag_ta: 'வர்த்தக பிரிண்டிங்',
+        shortDesc_en: 'Visiting cards, letterheads, bill books, stickers, brochures, flex banners and colour posters.',
+        shortDesc_ta: 'விசிட்டிங் கார்டு, லெட்டர்ஹெட், பில் புக், ஸ்டிக்கர், பிரசுரம், ஃப்ளெக்ஸ் பேனர், கலர் போஸ்டர்.',
+        subServices_en: [
+          'Single and double side visiting cards',
+          'Letterheads and bill books',
+          'Stickers and brochures',
+          'Flex banners for shops and events',
+          'Colour posters'
+        ],
+        subServices_ta: [
+          'ஒரு பக்க & இரு பக்க விசிட்டிங் கார்டு',
+          'லெட்டர்ஹெட் & பில் புக்',
+          'ஸ்டிக்கர் & பிரசுரங்கள்',
+          'கடை மற்றும் நிகழ்ச்சிகளுக்கான ஃப்ளெக்ஸ் பேனர்',
+          'கலர் போஸ்டர்'
+        ],
+        requiredDocuments_en: ['Your logo, text and photos, or a sample you like'],
+        requiredDocuments_ta: ['உங்கள் லோகோ, வாசகம், புகைப்படங்கள், அல்லது பிடித்த மாதிரி'],
+        processingTime_en: '24 to 48 hours for cards; banners often the same day',
+        processingTime_ta: 'கார்டுகளுக்கு 24 முதல் 48 மணி நேரம்; பேனர் பெரும்பாலும் அன்றே'
+      }
+    ]
   }
 ];
