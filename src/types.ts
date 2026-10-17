@@ -43,7 +43,7 @@ export interface GiftCategory {
   shortDesc_ta: string;
   items_en: string[];
   items_ta: string[];
-  occasions: ('birthday' | 'anniversary' | 'wedding' | 'corporate' | 'festival')[];
+  occasions: ('birthday' | 'anniversary' | 'wedding' | 'corporate' | 'festival' | 'housewarming')[];
   /** From the previous website; owner to confirm. */
   readyIn_en?: string;
   readyIn_ta?: string;
