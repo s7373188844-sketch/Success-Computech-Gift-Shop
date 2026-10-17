@@ -87,7 +87,7 @@ export const Home: React.FC = () => {
               {t.cta.browseGifts}
             </Link>
           </div>
-          <GiftGallery />
+          <GiftGallery limit={6} />
           <Reveal className="callout">
             <div>
               <h3 className="callout__title">{t.gifts.corporateTitle}</h3>
